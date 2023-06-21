@@ -15,10 +15,10 @@ namespace Ui
 
         [SerializeField]
         private Rotator loading;
-        
-        private string _url = "http://data.ikppbb.com/test-task-unity-data/pics/";
-        
-        private void Start() => TextureWebRequest.Get(GetUrl(), OnImageReceived, OnError);
+
+        private const string URL = "http://data.ikppbb.com/test-task-unity-data/pics/";
+
+        private void Start() => _ = TextureWebRequest.Get(GetUrl(), OnImageReceived, OnError);
 
         private void OnImageReceived(Texture2D texture)
         {
@@ -34,6 +34,6 @@ namespace Ui
             Debug.Log("Can not get from " + GetUrl() + "\n" + error);
         }
 
-        private string GetUrl() => _url + number + ".jpg";
+        private string GetUrl() => URL + number + ".jpg";
     }
 }
