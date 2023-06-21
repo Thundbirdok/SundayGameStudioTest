@@ -2,38 +2,73 @@ using UnityEngine;
 
 namespace Ui
 {
+    using ScenesManagement;
     using UnityEngine.UI;
     using Web;
 
     public class ImageHandler : MonoBehaviour
     {
-        [SerializeField]
-        private int number = 1;
+        private int Number { get; set; } = 1;
 
         [SerializeField]
-        private RawImage image;
+        private Image image;
 
         [SerializeField]
         private Rotator loading;
 
-        private const string URL = "http://data.ikppbb.com/test-task-unity-data/pics/";
+        [SerializeField]
+        private Button button;
 
-        private void Start() => _ = TextureWebRequest.Get(GetUrl(), OnImageReceived, OnError);
+        private const string VIEW_SCENE_NAME = "View";
+
+        private string _url;
+
+        public void Initialize(string url,int number)
+        {
+            Number = number;
+            _url = url + Number + ".jpg";
+
+            name = $"Image {Number}";
+            
+            _ = TextureWebRequest.Get(_url, OnImageReceived, OnError);
+        }
+
+        private void OnEnable()
+        {
+            button.onClick.AddListener(View);
+        }
+
+        private void OnDisable()
+        {
+            button.onClick.RemoveListener(View);
+        }
 
         private void OnImageReceived(Texture2D texture)
         {
             loading.gameObject.SetActive(false);
+
+            var sprite = Sprite.Create
+            (
+                texture,
+                new Rect(0.0f, 0.0f, texture.width, texture.height),
+                new Vector2(0.5f, 0.5f),
+                100.0f
+            );
             
-            image.texture = texture;
+            image.sprite = sprite;
         }
 
         private void OnError(string error)
         {
             loading.gameObject.SetActive(false);
             
-            Debug.Log("Can not get from " + GetUrl() + "\n" + error);
+            Debug.Log("Can not get from " + _url + "\n" + error);
         }
 
-        private string GetUrl() => URL + number + ".jpg";
+        private void View()
+        {
+            SpriteToView.Sprite = image.sprite;
+            _ = SceneLoaderHandler.Load(VIEW_SCENE_NAME);
+        }
     }
 }
