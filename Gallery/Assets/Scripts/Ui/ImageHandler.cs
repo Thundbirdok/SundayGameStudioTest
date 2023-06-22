@@ -30,6 +30,8 @@ namespace Ui
 
             name = $"Image {Number}";
             
+            button.gameObject.SetActive(false);
+            
             _ = TextureWebRequest.Get(_url, OnImageReceived, OnError);
         }
 
@@ -56,11 +58,15 @@ namespace Ui
             );
             
             image.sprite = sprite;
+            image.preserveAspect = true;
+            
+            button.gameObject.SetActive(true);
         }
 
         private void OnError(string error)
         {
             loading.gameObject.SetActive(false);
+            button.gameObject.SetActive(false);
             
             Debug.Log("Can not get from " + _url + "\n" + error);
         }
