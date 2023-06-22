@@ -2,29 +2,28 @@ namespace ScenesManagement
 {
     using System;
     using System.Threading.Tasks;
+    using EasyTransition;
     using UnityEngine;
-    using UnityEngine.SceneManagement;
 
     public class SceneLoader : MonoBehaviour
     {
         public event Action OnProgressChanged;
         
-        public float LoadProgress => Mathf.Min(_timer / minLoadTime, _sceneLoading.progress + 0.1f);
+        public float LoadProgress => Mathf.Min(_timer / minLoadTime, SceneLoaderHandler.LoadingOperation.progress + 0.1f);
         
         [SerializeField]
         private float minLoadTime = 3;
         
+        [SerializeField]
+        private TransitionSettings transition;
+
         private float _timer;
 
-        private AsyncOperation _sceneLoading;
-        
         private async void Awake()
         {
-            _sceneLoading = SceneManager.LoadSceneAsync(SceneLoaderHandler.Scene);
+            SceneLoaderHandler.LoadTargetScene();
 
-            _sceneLoading.allowSceneActivation = false;
-            
-            while (_sceneLoading.isDone == false && _timer < minLoadTime)
+            while (LoadProgress < 1)
             {
                 await Task.Yield();
                 
@@ -32,8 +31,8 @@ namespace ScenesManagement
                 
                 OnProgressChanged?.Invoke();
             }
-            
-            _sceneLoading.allowSceneActivation = true;
+
+            SceneLoaderHandler.SetTransition(transition, true);
         }
     }
 }

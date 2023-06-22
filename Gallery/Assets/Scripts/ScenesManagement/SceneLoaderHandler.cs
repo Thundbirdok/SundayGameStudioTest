@@ -1,24 +1,92 @@
 namespace ScenesManagement
 {
-    using System.Threading.Tasks;
+    using EasyTransition;
+    using UnityEngine;
     using UnityEngine.SceneManagement;
 
     public static class SceneLoaderHandler
     {
-        public static string Scene { get; private set; }
-
         private const string LOADING_SCENE = "Loading";
-        
-        public async static Task Load(string sceneName)
-        {
-            Scene = sceneName;
-            
-            var operation = SceneManager.LoadSceneAsync(LOADING_SCENE);
 
-            while (operation.isDone == false)
+        public static AsyncOperation LoadingOperation { get; private set; }
+        
+        private static string _scene;
+
+        private static bool _isLoading;
+        
+        public static void LoadThroughLoadingScene(string sceneName, TransitionSettings transition)
+        {
+            if (_isLoading)
             {
-                await Task.Yield();
+                return;
             }
+
+            _isLoading = true;
+            
+            _scene = sceneName;
+            
+            LoadScene(LOADING_SCENE, transition,true);
+        }
+
+        public static void LoadTargetScene()
+        {
+            LoadScene(_scene);
+
+            _isLoading = false;
+        }
+        
+        private static void LoadScene(string sceneName)
+        {
+            LoadingOperation = SceneManager.LoadSceneAsync(sceneName);
+
+            LoadingOperation.allowSceneActivation = false;
+        }
+        
+        private static void LoadScene(string sceneName,  TransitionSettings transition, bool activateScene)
+        {
+            LoadingOperation = SceneManager.LoadSceneAsync(sceneName);
+
+            LoadingOperation.allowSceneActivation = false;
+            
+            SetTransition(transition, activateScene);
+        }
+        
+        public static void SetTransition(TransitionSettings transition, bool activateScene)
+        {
+            var transitionManager = TransitionManager.Instance();
+
+            if (transitionManager == null)
+            {
+                return;
+            }
+            
+            transitionManager.Transition(transition, 0);
+
+            if (activateScene == false)
+            {
+                return;
+            }
+
+            if (transitionManager.RunningTransition == false)
+            {
+                ActivateScene();
+                
+                return;
+            }
+            
+            transitionManager.OnTransitionCutPointReached += ActivateScene;
+        }
+        
+        private static void ActivateScene()
+        {
+            var transitionManager = TransitionManager.Instance();
+
+            if (transitionManager != null)
+            {
+                transitionManager.OnTransitionCutPointReached -= ActivateScene;
+            }
+
+            LoadingOperation.allowSceneActivation = true;
         }
     }
 }

@@ -1246,6 +1246,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae9bce4e6d5fa7f44a0e73d2246954be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  menuScene: Menu
+  viewScene: View
   imageGrid:
     url: http://data.ikppbb.com/test-task-unity-data/pics/
     objectPrefab: {fileID: 3272769165494848195, guid: abd124eeca5af9c4dbfccee1df540123, type: 3}
@@ -1255,6 +1257,7 @@ MonoBehaviour:
     startNumber: 1
     endNumber: 66
   toMenu: {fileID: 370435285}
+  transition: {fileID: 11400000, guid: b0126e1e0c6c2a04895d564bd230dfb9, type: 2}
 --- !u!1 &1794600490
 GameObject:
   m_ObjectHideFlags: 0

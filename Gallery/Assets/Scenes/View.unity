@@ -607,11 +607,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be9c4f8808729a94f9832fa3af4447c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  galleryScene: Gallery
   image: {fileID: 941175254}
   backButton: {fileID: 430806074}
   canvasScaler: {fileID: 390612862}
   portraitReferenceResolution: {x: 1080, y: 1920}
   landscapeReferenceResolution: {x: 1920, y: 1080}
+  transition: {fileID: 11400000, guid: b0126e1e0c6c2a04895d564bd230dfb9, type: 2}
 --- !u!1 &1357972682
 GameObject:
   m_ObjectHideFlags: 0

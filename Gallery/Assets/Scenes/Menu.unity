@@ -599,7 +599,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d17fb51011eb014dab2b092d36ddf7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  galleryScene: Gallery
   toGallery: {fileID: 960280806}
+  transition: {fileID: 11400000, guid: b0126e1e0c6c2a04895d564bd230dfb9, type: 2}
 --- !u!1 &1721952126
 GameObject:
   m_ObjectHideFlags: 0
