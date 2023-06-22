@@ -3,6 +3,7 @@ using UnityEngine;
 namespace Ui
 {
     using System;
+    using KevinCastejon.MoreAttributes;
     using ScenesManagement;
     using UnityEngine.UI;
 
@@ -23,7 +24,8 @@ namespace Ui
         [SerializeField]
         private Vector2Int landscapeReferenceResolution = new Vector2Int(1920, 1080);
         
-        private const string GALLERY_SCENE_NAME = "Gallery";
+        [SerializeField, Scene]
+        private string galleryScene = "Gallery";
 
         private DeviceOrientation _deviceOrientation;
 
@@ -85,7 +87,7 @@ namespace Ui
         
         private void Back()
         {
-            _ = SceneLoaderHandler.Load(GALLERY_SCENE_NAME);
+            _ = SceneLoaderHandler.Load(galleryScene);
         }
     }
 }

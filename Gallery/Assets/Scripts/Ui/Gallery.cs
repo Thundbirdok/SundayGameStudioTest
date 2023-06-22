@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace Ui
 {
+    using KevinCastejon.MoreAttributes;
     using ScenesManagement;
 
     public class Gallery : MonoBehaviour
@@ -12,7 +13,8 @@ namespace Ui
         [SerializeField]
         private BackButton toMenu;
 
-        private const string MENU_SCENE_NAME = "Menu"; 
+        [SerializeField, Scene]
+        private string menuScene = "Menu"; 
         
         private void OnEnable()
         {
@@ -26,6 +28,6 @@ namespace Ui
             imageGrid.Deinitialize();
         }
 
-        private void ToMenu() => _ = SceneLoaderHandler.Load(MENU_SCENE_NAME);
+        private void ToMenu() => _ = SceneLoaderHandler.Load(menuScene);
     }
 }

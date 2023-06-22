@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace Ui
 {
+    using KevinCastejon.MoreAttributes;
     using ScenesManagement;
     using UnityEngine.UI;
 
@@ -10,7 +11,8 @@ namespace Ui
         [SerializeField]
         private Button toGallery;
 
-        private const string GALLERY_SCENE_NAME = "Gallery";
+        [SerializeField, Scene]
+        private string galleryScene = "Gallery";
         
         private void OnEnable()
         {
@@ -24,6 +26,6 @@ namespace Ui
             Input.backButtonLeavesApp = false;
         }
 
-        private void ToGallery() => _ = SceneLoaderHandler.Load(GALLERY_SCENE_NAME);
+        private void ToGallery() => _ = SceneLoaderHandler.Load(galleryScene);
     }
 }

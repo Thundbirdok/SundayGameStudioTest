@@ -36,21 +36,4 @@ namespace ScenesManagement
             _sceneLoading.allowSceneActivation = true;
         }
     }
-    
-    public static class SceneLoaderHandler
-    {
-        public static string Scene { get; private set; }
-
-        public async static Task Load(string sceneName)
-        {
-            Scene = sceneName;
-            
-            var operation = SceneManager.LoadSceneAsync("Loading");
-
-            while (operation.isDone == false)
-            {
-                await Task.Yield();
-            }
-        }
-    }
 }

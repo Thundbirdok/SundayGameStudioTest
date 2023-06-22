@@ -252,6 +252,7 @@ MonoBehaviour:
   image: {fileID: 3577366399094673735}
   loading: {fileID: 8356542006805805981}
   button: {fileID: 2052592003684871718}
+  scene: View
 --- !u!1 &8356542006805805983
 GameObject:
   m_ObjectHideFlags: 0

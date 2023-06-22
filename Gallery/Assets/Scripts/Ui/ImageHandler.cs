@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace Ui
 {
+    using KevinCastejon.MoreAttributes;
     using ScenesManagement;
     using UnityEngine.UI;
     using Web;
@@ -19,8 +20,9 @@ namespace Ui
         [SerializeField]
         private Button button;
 
-        private const string VIEW_SCENE_NAME = "View";
-
+        [SerializeField, Scene]
+        private string viewScene = "View";
+        
         private string _url;
 
         public void Initialize(string url,int number)
@@ -74,7 +76,7 @@ namespace Ui
         private void View()
         {
             SpriteToView.Sprite = image.sprite;
-            _ = SceneLoaderHandler.Load(VIEW_SCENE_NAME);
+            _ = SceneLoaderHandler.Load(viewScene);
         }
     }
 }
