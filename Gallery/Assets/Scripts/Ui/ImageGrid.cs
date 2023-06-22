@@ -10,6 +10,8 @@ namespace Ui
     [Serializable]
     public class ImageGrid
     {
+        public event Action<Sprite> OnImageSelected;
+        
         [SerializeField]
         private string url = "http://data.ikppbb.com/test-task-unity-data/pics/";
         
@@ -26,10 +28,10 @@ namespace Ui
         private RectTransform box;
         
         [SerializeField]
-        public int startNumber = 1;     // Starting number of the objects
+        public int startNumber = 1;
 
         [SerializeField]
-        public int endNumber = 66;      // Ending number of the objects
+        public int endNumber = 66;
 
         private readonly List<ImageHandler> _spawnedObjects = new List<ImageHandler>();
 
@@ -70,6 +72,23 @@ namespace Ui
             SpawnObjects(startNumber);
         }
 
+        public void Deinitialize()
+        {
+            ClearSpawnedObjects();
+
+            scrollRect.onValueChanged.RemoveListener(LoadNewObjects);
+        }
+
+        private void ClearSpawnedObjects()
+        {
+            for (var i = 0; i < _spawnedObjects.Count; i++)
+            {
+                _spawnedObjects[i].OnImageSelected -= ToView;
+                Object.Destroy(_spawnedObjects[i].gameObject);
+                _spawnedObjects.RemoveAt(i);
+            }
+        }
+
         private int GetObjectCountFitInScreen()
         {
             var lastVisibleIndex =
@@ -84,17 +103,6 @@ namespace Ui
                 );
 
             return Mathf.Clamp(lastVisibleIndex, startNumber, endNumber);
-        }
-
-        public void Deinitialize() => scrollRect.onValueChanged.RemoveListener(LoadNewObjects);
-
-        private void SpawnObject(int number)
-        {
-            var spawnedObject = Object.Instantiate(objectPrefab, grid.transform);
-
-            spawnedObject.Initialize(url, number);
-
-            _spawnedObjects.Add(spawnedObject);
         }
 
         private void LoadNewObjects(Vector2 normalizedPosition)
@@ -124,5 +132,17 @@ namespace Ui
                 SpawnObject(i);
             }
         }
+
+        private void SpawnObject(int number)
+        {
+            var spawnedObject = Object.Instantiate(objectPrefab, grid.transform);
+
+            spawnedObject.Initialize(url, number);
+
+            spawnedObject.OnImageSelected += ToView;
+            _spawnedObjects.Add(spawnedObject);
+        }
+
+        private void ToView(Sprite sprite) => OnImageSelected?.Invoke(sprite);
     }
 }

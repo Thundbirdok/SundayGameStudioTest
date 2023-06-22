@@ -2,13 +2,15 @@ using UnityEngine;
 
 namespace Ui
 {
-    using KevinCastejon.MoreAttributes;
-    using ScenesManagement;
+    using System;
+    using DG.Tweening;
     using UnityEngine.UI;
     using Web;
 
     public class ImageHandler : MonoBehaviour
     {
+        public event Action<Sprite> OnImageSelected;
+        
         private int Number { get; set; } = 1;
 
         [SerializeField]
@@ -18,12 +20,19 @@ namespace Ui
         private Rotator loading;
 
         [SerializeField]
+        private Image error;
+        
+        [SerializeField]
         private Button button;
 
-        [SerializeField, Scene]
-        private string viewScene = "View";
+        [SerializeField]
+        private float tweenTime = 0.25f;
         
         private string _url;
+
+        private Tween _showImage;
+        private Tween _showLoading;
+        private Tween _showError;
 
         public void Initialize(string url,int number)
         {
@@ -31,26 +40,26 @@ namespace Ui
             _url = url + Number + ".jpg";
 
             name = $"Image {Number}";
-            
+
+            image.gameObject.SetActive(false);
+
             button.gameObject.SetActive(false);
+            error.gameObject.SetActive(false);
+            loading.gameObject.SetActive(true);
+
+            SetTweens();
+            
+            _showLoading.PlayForward();
             
             _ = TextureWebRequest.Get(_url, OnImageReceived, OnError);
         }
 
-        private void OnEnable()
-        {
-            button.onClick.AddListener(View);
-        }
+        private void OnEnable() => button.onClick.AddListener(ToView);
 
-        private void OnDisable()
-        {
-            button.onClick.RemoveListener(View);
-        }
+        private void OnDisable() => button.onClick.RemoveListener(ToView);
 
         private void OnImageReceived(Texture2D texture)
         {
-            loading.gameObject.SetActive(false);
-
             var sprite = Sprite.Create
             (
                 texture,
@@ -63,20 +72,42 @@ namespace Ui
             image.preserveAspect = true;
             
             button.gameObject.SetActive(true);
+            image.gameObject.SetActive(true);
+
+            _showLoading.OnRewind(ShowImage).PlayBackwards();
         }
 
-        private void OnError(string error)
+        private void OnError(string errorMessage)
+        {
+            image.gameObject.SetActive(false);
+            button.gameObject.SetActive(false);
+            error.gameObject.SetActive(true);
+
+            _showLoading.OnRewind(ShowError).PlayBackwards();
+
+            Debug.Log("Can not get from " + _url + "\n" + errorMessage);
+        }
+
+        private void ToView() => OnImageSelected?.Invoke(image.sprite);
+
+        private void SetTweens()
+        {
+            var loadingRectTransform = (loading.transform as RectTransform);
+            _showLoading ??= loadingRectTransform.DOScale(1.0f, tweenTime).From(0).SetAutoKill(false);
+            _showImage ??= image.rectTransform.DOScale(1.0f, tweenTime).From(0).SetAutoKill(false);
+            _showError ??= error.rectTransform.DOScale(1.0f, tweenTime).From(0).SetAutoKill(false);
+        }
+
+        private void ShowError()
         {
             loading.gameObject.SetActive(false);
-            button.gameObject.SetActive(false);
-            
-            Debug.Log("Can not get from " + _url + "\n" + error);
+            _showError.PlayForward();
         }
 
-        private void View()
+        private void ShowImage()
         {
-            SpriteToView.Sprite = image.sprite;
-            _ = SceneLoaderHandler.Load(viewScene);
+            loading.gameObject.SetActive(false);
+            _showImage.PlayForward();
         }
     }
 }
