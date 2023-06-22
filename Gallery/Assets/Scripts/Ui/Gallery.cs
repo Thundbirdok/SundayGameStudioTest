@@ -3,7 +3,6 @@ using UnityEngine;
 namespace Ui
 {
     using ScenesManagement;
-    using UnityEngine.UI;
 
     public class Gallery : MonoBehaviour
     {
@@ -11,7 +10,7 @@ namespace Ui
         private ImageGrid imageGrid;
         
         [SerializeField]
-        private Button toMenu;
+        private BackButton toMenu;
 
         private const string MENU_SCENE_NAME = "Menu"; 
         

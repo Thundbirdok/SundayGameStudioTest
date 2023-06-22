@@ -15,11 +15,13 @@ namespace Ui
         private void OnEnable()
         {
             toGallery.onClick.AddListener(ToGallery);
+            Input.backButtonLeavesApp = true;
         }
 
         private void OnDisable()
         {
             toGallery.onClick.RemoveListener(ToGallery);
+            Input.backButtonLeavesApp = false;
         }
 
         private void ToGallery() => _ = SceneLoaderHandler.Load(GALLERY_SCENE_NAME);
