@@ -1,13 +1,13 @@
 namespace Car
 {
-    using System;
     using UnityEngine;
-    
+    using UnityEngine.InputSystem;
+
     public class CarMover : MonoBehaviour
     {
         [SerializeReference]
         private Rigidbody carRigidbody;
-        
+
         [SerializeField] 
         private float motorForce;
 
@@ -47,14 +47,38 @@ namespace Car
         [SerializeField]
         private Transform rearRightWheelTransform;
 
-        private float _horizontalInput;
-        private float _verticalInput;
+        private float _turnInput;
+        private float _accelerateInput;
         private float _currentSteerAngle;
-        private bool _isHandBreaking;
+        private bool _handBreakInput;
 
-        private void Update()
+        private bool _isInitialized;
+
+        private PlayerInputs _playerInputs;
+        private PlayerInputs.CarActions _actions;
+        
+        private void OnEnable()
         {
-            GetInput();
+            Initialized();
+            
+            _actions.Enable();
+            
+            _actions.Accelerate.started += Accelerate;
+            _actions.Turn.started += Turn;
+            _actions.HandBreak.started += HandBreak;
+            
+            _actions.Accelerate.canceled += Accelerate;
+            _actions.Turn.canceled += Turn;
+            _actions.HandBreak.canceled += HandBreak;
+        }
+
+        private void OnDisable()
+        {
+            _actions.Accelerate.performed -= Accelerate;
+            _actions.Turn.performed -= Turn;
+            _actions.HandBreak.performed -= HandBreak;
+            
+            _actions.Disable();
         }
 
         private void FixedUpdate() 
@@ -64,14 +88,24 @@ namespace Car
             UpdateWheels();
         }
 
-        private void GetInput() 
+        private void Initialized()
         {
-            _horizontalInput = Input.GetAxis("Horizontal");
-            
-            _verticalInput = Input.GetAxis("Vertical");
-            
-            _isHandBreaking = Input.GetKey(KeyCode.Space);
+            if (_isInitialized)
+            {
+                return;
+            }
+
+            _isInitialized = true;
+
+            _playerInputs = new PlayerInputs(); 
+            _actions = _playerInputs.Car;
         }
+
+        public void Accelerate(InputAction.CallbackContext context) => _accelerateInput = context.ReadValue<float>();
+
+        public void Turn(InputAction.CallbackContext context) => _turnInput = context.ReadValue<float>();
+
+        public void HandBreak(InputAction.CallbackContext context) => _handBreakInput = context.started;
 
         private void HandleVelocity() 
         {
@@ -98,11 +132,11 @@ namespace Car
 
         private void Accelerate()
         {
-            var torque = _verticalInput * motorForce;
+            var torque = _accelerateInput * motorForce;
 
             SetMotorTorque(torque);
 
-            if (_isHandBreaking)
+            if (_handBreakInput)
             {
                 SetHandBreakTorque(handBreakForce);
             }
@@ -116,8 +150,8 @@ namespace Car
         {
             return relativeVelocity switch
             {
-                > 0 when _verticalInput < 0f => true,
-                < 0 when _verticalInput > 0f => true,
+                > 0 when _accelerateInput < 0f => true,
+                < 0 when _accelerateInput > 0f => true,
                 _                            => false
             };
         }
@@ -130,7 +164,7 @@ namespace Car
 
         private bool IsMovesTooSlow(float relativeVelocity)
         {
-            return relativeVelocity <= breakVelocity && _verticalInput == 0;
+            return relativeVelocity <= breakVelocity && _accelerateInput == 0;
         }
 
         private void SetMotorTorque(float torque)
@@ -159,7 +193,7 @@ namespace Car
         
         private void HandleSteering() 
         {
-            _currentSteerAngle = maxSteerAngle * _horizontalInput;
+            _currentSteerAngle = maxSteerAngle * _turnInput;
             frontLeftWheelCollider.steerAngle = _currentSteerAngle;
             frontRightWheelCollider.steerAngle = _currentSteerAngle;
         }
