@@ -101,11 +101,11 @@ namespace Car
             _actions = _playerInputs.Car;
         }
 
-        public void Accelerate(InputAction.CallbackContext context) => _accelerateInput = context.ReadValue<float>();
+        private void Accelerate(InputAction.CallbackContext context) => _accelerateInput = context.ReadValue<float>();
 
-        public void Turn(InputAction.CallbackContext context) => _turnInput = context.ReadValue<float>();
+        private void Turn(InputAction.CallbackContext context) => _turnInput = context.ReadValue<float>();
 
-        public void HandBreak(InputAction.CallbackContext context) => _handBreakInput = context.started;
+        private void HandBreak(InputAction.CallbackContext context) => _handBreakInput = context.started;
 
         private void HandleVelocity() 
         {

@@ -19,7 +19,7 @@
                     "type": "Value",
                     "id": "a85d0c1d-40cc-4c51-916e-275c1f932cf9",
                     "expectedControlType": "Axis",
-                    "processors": "",
+                    "processors": "AxisDeadzone",
                     "interactions": "",
                     "initialStateCheck": true
                 },
@@ -48,10 +48,10 @@
                 {
                     "name": "negative",
                     "id": "99b9dcb9-8e5f-4018-8b7e-865c4d61d741",
-                    "path": "<Keyboard>/s",
+                    "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Gamepad",
                     "action": "Accelerate",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -59,10 +59,43 @@
                 {
                     "name": "positive",
                     "id": "f35dc5d1-fa64-4d2e-beca-3318aa5fe95d",
-                    "path": "<Keyboard>/w",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Accelerate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "1D Axis",
+                    "id": "b3ae7eb8-9593-43f0-a8e1-a89ef36fa0b5",
+                    "path": "1DAxis",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
+                    "action": "Accelerate",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "43e531ae-bcb2-4f0a-9f51-90b2566ce22b",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Accelerate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "f79871d2-93ca-49d7-ba01-33be9d91b4b7",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
                     "action": "Accelerate",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -70,10 +103,21 @@
                 {
                     "name": "",
                     "id": "0ce7a0e6-ad1b-4933-9102-4ed6b4dc9273",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "HandBreak",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "35659396-a44e-46e9-b81a-648e4686c606",
                     "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Keyboard",
                     "action": "HandBreak",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -81,6 +125,39 @@
                 {
                     "name": "1D Axis",
                     "id": "ee066234-cc3c-4f97-b884-9fca3c18bc69",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "AxisDeadzone",
+                    "groups": "",
+                    "action": "Turn",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "2250a206-9c99-45bc-9962-80ccf9ec0087",
+                    "path": "<Gamepad>/leftStick/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Turn",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "c35d2b4f-1683-4612-aaef-1ecf6d5ab8e5",
+                    "path": "<Gamepad>/leftStick/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Turn",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "1D Axis",
+                    "id": "dff79139-950c-482e-ba5d-60ac783ff2df",
                     "path": "1DAxis",
                     "interactions": "",
                     "processors": "",
@@ -91,22 +168,22 @@
                 },
                 {
                     "name": "negative",
-                    "id": "2250a206-9c99-45bc-9962-80ccf9ec0087",
+                    "id": "b8666806-07ec-483f-964f-0f3177999d0c",
                     "path": "<Keyboard>/a",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Keyboard",
                     "action": "Turn",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
                 {
                     "name": "positive",
-                    "id": "c35d2b4f-1683-4612-aaef-1ecf6d5ab8e5",
+                    "id": "6ce03753-9945-40b1-badc-ed42b14b8d45",
                     "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Keyboard",
                     "action": "Turn",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -114,5 +191,28 @@
             ]
         }
     ],
-    "controlSchemes": []
+    "controlSchemes": [
+        {
+            "name": "Keyboard",
+            "bindingGroup": "Keyboard",
+            "devices": [
+                {
+                    "devicePath": "<Keyboard>",
+                    "isOptional": true,
+                    "isOR": false
+                }
+            ]
+        },
+        {
+            "name": "Gamepad",
+            "bindingGroup": "Gamepad",
+            "devices": [
+                {
+                    "devicePath": "<Gamepad>",
+                    "isOptional": true,
+                    "isOR": false
+                }
+            ]
+        }
+    ]
 }
