@@ -2,9 +2,15 @@ using UnityEngine;
 
 namespace Ui.Common
 {
-    public class CarInputs : MonoBehaviour
+    using System;
+
+    [Serializable]
+    public class CarMobileInputs
     {
-        private void Awake()
+        [SerializeField]
+        private GameObject gameObject;
+        
+        public void Initialize()
         {
             #if UNITY_ANDROID || UNITY_IOS
             
