@@ -106,7 +106,7 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                     ""path"": ""<Keyboard>/s"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Keyboard"",
+                    ""groups"": ""KeyboardMouse"",
                     ""action"": ""Accelerate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -117,7 +117,7 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                     ""path"": ""<Keyboard>/w"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Keyboard"",
+                    ""groups"": ""KeyboardMouse"",
                     ""action"": ""Accelerate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -139,7 +139,7 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                     ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Keyboard"",
+                    ""groups"": ""KeyboardMouse"",
                     ""action"": ""HandBreak"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -194,7 +194,7 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Keyboard"",
+                    ""groups"": ""KeyboardMouse"",
                     ""action"": ""Turn"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -205,22 +205,179 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                     ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Keyboard"",
+                    ""groups"": ""KeyboardMouse"",
                     ""action"": ""Turn"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                }
+            ]
+        },
+        {
+            ""name"": ""Humanoid"",
+            ""id"": ""26a68520-8d0c-42e4-a2e6-c2f74be8e32e"",
+            ""actions"": [
+                {
+                    ""name"": ""Walk"",
+                    ""type"": ""Value"",
+                    ""id"": ""8f8e580d-6aed-4102-a3e0-d6b815ea5d7b"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": ""StickDeadzone"",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Sprint"",
+                    ""type"": ""Button"",
+                    ""id"": ""336cb7d8-8ffc-4508-8e31-b25a53d7a116"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""71c48e6e-2d09-445a-9204-8facbc8f8b81"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Fire"",
+                    ""type"": ""Button"",
+                    ""id"": ""11593c76-f667-4ee4-973d-0239bcdbbbf8"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Aim"",
+                    ""type"": ""Button"",
+                    ""id"": ""b88839cd-6d81-4fb1-bb40-1f09042cb33c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""e1a10867-684c-42aa-8c7c-e6e3d3508cc7"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Walk"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""dcb4eefc-053f-4ead-91a7-af8b0b201516"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""Walk"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""747bf67d-25c9-48fa-bc2b-ecde349ae9f3"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""Walk"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""19a183f8-0d7e-4ef1-9993-962bba8c06a6"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""Walk"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""06edfd07-1e3d-4683-8afa-165b794c2370"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""Walk"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""93e2a51d-2d57-4743-9abf-035dc0b7fbcd"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f74b9783-2b49-4bce-8b15-184593943517"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""Aim"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b63e3700-e222-4752-9197-448074591abb"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""Sprint"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b47b757d-c16a-4c42-a926-8906f37558f9"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
     ],
     ""controlSchemes"": [
         {
-            ""name"": ""Keyboard"",
-            ""bindingGroup"": ""Keyboard"",
+            ""name"": ""KeyboardMouse"",
+            ""bindingGroup"": ""KeyboardMouse"",
             ""devices"": [
                 {
                     ""devicePath"": ""<Keyboard>"",
-                    ""isOptional"": true,
+                    ""isOptional"": false,
+                    ""isOR"": false
+                },
+                {
+                    ""devicePath"": ""<Mouse>"",
+                    ""isOptional"": false,
                     ""isOR"": false
                 }
             ]
@@ -243,6 +400,13 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
         m_Car_Accelerate = m_Car.FindAction("Accelerate", throwIfNotFound: true);
         m_Car_Turn = m_Car.FindAction("Turn", throwIfNotFound: true);
         m_Car_HandBreak = m_Car.FindAction("HandBreak", throwIfNotFound: true);
+        // Humanoid
+        m_Humanoid = asset.FindActionMap("Humanoid", throwIfNotFound: true);
+        m_Humanoid_Walk = m_Humanoid.FindAction("Walk", throwIfNotFound: true);
+        m_Humanoid_Sprint = m_Humanoid.FindAction("Sprint", throwIfNotFound: true);
+        m_Humanoid_Jump = m_Humanoid.FindAction("Jump", throwIfNotFound: true);
+        m_Humanoid_Fire = m_Humanoid.FindAction("Fire", throwIfNotFound: true);
+        m_Humanoid_Aim = m_Humanoid.FindAction("Aim", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -347,13 +511,78 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
         }
     }
     public CarActions @Car => new CarActions(this);
-    private int m_KeyboardSchemeIndex = -1;
-    public InputControlScheme KeyboardScheme
+
+    // Humanoid
+    private readonly InputActionMap m_Humanoid;
+    private IHumanoidActions m_HumanoidActionsCallbackInterface;
+    private readonly InputAction m_Humanoid_Walk;
+    private readonly InputAction m_Humanoid_Sprint;
+    private readonly InputAction m_Humanoid_Jump;
+    private readonly InputAction m_Humanoid_Fire;
+    private readonly InputAction m_Humanoid_Aim;
+    public struct HumanoidActions
+    {
+        private @PlayerInputs m_Wrapper;
+        public HumanoidActions(@PlayerInputs wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Walk => m_Wrapper.m_Humanoid_Walk;
+        public InputAction @Sprint => m_Wrapper.m_Humanoid_Sprint;
+        public InputAction @Jump => m_Wrapper.m_Humanoid_Jump;
+        public InputAction @Fire => m_Wrapper.m_Humanoid_Fire;
+        public InputAction @Aim => m_Wrapper.m_Humanoid_Aim;
+        public InputActionMap Get() { return m_Wrapper.m_Humanoid; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(HumanoidActions set) { return set.Get(); }
+        public void SetCallbacks(IHumanoidActions instance)
+        {
+            if (m_Wrapper.m_HumanoidActionsCallbackInterface != null)
+            {
+                @Walk.started -= m_Wrapper.m_HumanoidActionsCallbackInterface.OnWalk;
+                @Walk.performed -= m_Wrapper.m_HumanoidActionsCallbackInterface.OnWalk;
+                @Walk.canceled -= m_Wrapper.m_HumanoidActionsCallbackInterface.OnWalk;
+                @Sprint.started -= m_Wrapper.m_HumanoidActionsCallbackInterface.OnSprint;
+                @Sprint.performed -= m_Wrapper.m_HumanoidActionsCallbackInterface.OnSprint;
+                @Sprint.canceled -= m_Wrapper.m_HumanoidActionsCallbackInterface.OnSprint;
+                @Jump.started -= m_Wrapper.m_HumanoidActionsCallbackInterface.OnJump;
+                @Jump.performed -= m_Wrapper.m_HumanoidActionsCallbackInterface.OnJump;
+                @Jump.canceled -= m_Wrapper.m_HumanoidActionsCallbackInterface.OnJump;
+                @Fire.started -= m_Wrapper.m_HumanoidActionsCallbackInterface.OnFire;
+                @Fire.performed -= m_Wrapper.m_HumanoidActionsCallbackInterface.OnFire;
+                @Fire.canceled -= m_Wrapper.m_HumanoidActionsCallbackInterface.OnFire;
+                @Aim.started -= m_Wrapper.m_HumanoidActionsCallbackInterface.OnAim;
+                @Aim.performed -= m_Wrapper.m_HumanoidActionsCallbackInterface.OnAim;
+                @Aim.canceled -= m_Wrapper.m_HumanoidActionsCallbackInterface.OnAim;
+            }
+            m_Wrapper.m_HumanoidActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Walk.started += instance.OnWalk;
+                @Walk.performed += instance.OnWalk;
+                @Walk.canceled += instance.OnWalk;
+                @Sprint.started += instance.OnSprint;
+                @Sprint.performed += instance.OnSprint;
+                @Sprint.canceled += instance.OnSprint;
+                @Jump.started += instance.OnJump;
+                @Jump.performed += instance.OnJump;
+                @Jump.canceled += instance.OnJump;
+                @Fire.started += instance.OnFire;
+                @Fire.performed += instance.OnFire;
+                @Fire.canceled += instance.OnFire;
+                @Aim.started += instance.OnAim;
+                @Aim.performed += instance.OnAim;
+                @Aim.canceled += instance.OnAim;
+            }
+        }
+    }
+    public HumanoidActions @Humanoid => new HumanoidActions(this);
+    private int m_KeyboardMouseSchemeIndex = -1;
+    public InputControlScheme KeyboardMouseScheme
     {
         get
         {
-            if (m_KeyboardSchemeIndex == -1) m_KeyboardSchemeIndex = asset.FindControlSchemeIndex("Keyboard");
-            return asset.controlSchemes[m_KeyboardSchemeIndex];
+            if (m_KeyboardMouseSchemeIndex == -1) m_KeyboardMouseSchemeIndex = asset.FindControlSchemeIndex("KeyboardMouse");
+            return asset.controlSchemes[m_KeyboardMouseSchemeIndex];
         }
     }
     private int m_GamepadSchemeIndex = -1;
@@ -370,5 +599,13 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
         void OnAccelerate(InputAction.CallbackContext context);
         void OnTurn(InputAction.CallbackContext context);
         void OnHandBreak(InputAction.CallbackContext context);
+    }
+    public interface IHumanoidActions
+    {
+        void OnWalk(InputAction.CallbackContext context);
+        void OnSprint(InputAction.CallbackContext context);
+        void OnJump(InputAction.CallbackContext context);
+        void OnFire(InputAction.CallbackContext context);
+        void OnAim(InputAction.CallbackContext context);
     }
 }

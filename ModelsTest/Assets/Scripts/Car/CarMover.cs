@@ -63,22 +63,25 @@ namespace Car
             
             _actions.Enable();
             
-            _actions.Accelerate.started += Accelerate;
-            _actions.Turn.started += Turn;
-            _actions.HandBreak.started += HandBreak;
-            
-            _actions.Accelerate.canceled += Accelerate;
-            _actions.Turn.canceled += Turn;
-            _actions.HandBreak.canceled += HandBreak;
+            Subscribe();
         }
 
         private void OnDisable()
         {
-            _actions.Accelerate.performed -= Accelerate;
-            _actions.Turn.performed -= Turn;
-            _actions.HandBreak.performed -= HandBreak;
-            
+            Unsubscribe();
+
             _actions.Disable();
+        }
+
+        private void Subscribe()
+        {
+            _actions.Accelerate.started += Accelerate;
+            _actions.Turn.started += Turn;
+            _actions.HandBreak.started += HandBreak;
+
+            _actions.Accelerate.canceled += Accelerate;
+            _actions.Turn.canceled += Turn;
+            _actions.HandBreak.canceled += HandBreak;
         }
 
         private void FixedUpdate() 
@@ -86,6 +89,17 @@ namespace Car
             HandleVelocity();
             HandleSteering();
             UpdateWheels();
+        }
+
+        private void Unsubscribe()
+        {
+            _actions.Accelerate.started -= Accelerate;
+            _actions.Turn.started -= Turn;
+            _actions.HandBreak.started -= HandBreak;
+
+            _actions.Accelerate.canceled -= Accelerate;
+            _actions.Turn.canceled -= Turn;
+            _actions.HandBreak.canceled -= HandBreak;
         }
 
         private void Initialized()
