@@ -5,7 +5,7 @@ namespace Humanoid
     using UnityEngine;
 
     [Serializable]
-    public class CameraController
+    public class HumanoidCameraController
     {
         [field: SerializeField]
         public Transform CameraTarget { get; private set; }

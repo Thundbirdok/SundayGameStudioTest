@@ -6,22 +6,14 @@ namespace Humanoid
 
     public class HumanoidActionsController : MonoBehaviour
     {
-        public int ActiveActions { get; private set; }
+        [SerializeField]
+        private HumanoidAnimationsController animationsController;
 
         [SerializeField]
-        private CharacterController characterController;
+        private HumanoidCameraController cameraController;
 
         [SerializeField]
-        private AnimationsController animationsController;
-
-        [SerializeField]
-        private CameraController cameraController;
-        
-        [SerializeField]
-        private Transform modelTransform;
-
-        [SerializeField]
-        private Camera raycastCamera;
+        private HumanoidMovementController movementController;
 
         [SerializeField]
         private Vector2Lerp directionInput;
@@ -30,30 +22,25 @@ namespace Humanoid
         private Vector2Lerp lookInput;
 
         [SerializeField]
-        private float walkSpeed = 0.1f;
-
-        [SerializeField]
         private FloatLerp sprinting;
 
         [SerializeField]
         private FloatLerp aiming;
 
         [SerializeField]
-        private float aimModelRotationSpeed = 20f;
-
-        [SerializeField]
         private bool isPrintLog;
-
+        
         private bool _isInitialized;
+
+        private int _activeActions;
+
+        private bool _isFire;
 
         private PlayerInputs _playerInputs;
         private PlayerInputs.HumanoidActions _actions;
 
-        private bool _isFire;
 
         private Vector3 _aimTarget;
-
-        private Vector3 _moveForceOfFrame;
 
         private void OnEnable()
         {
@@ -77,70 +64,21 @@ namespace Humanoid
 
         private void FixedUpdate()
         {
-            ApplyForceToCharacterController();
+            movementController.Move();
         }
 
         private void Update()
         {
             UpdateValueLerps();
 
-            animationsController.UpdateState(Time.deltaTime);
+            animationsController.UpdateState(Time.deltaTime, _activeActions);
             
-            RotateModel();
-        }
-
-        private void RotateModel()
-        {
-            if (IsNeedRotateModel() == false)
-            {
-                return;
-            }
-
-            if (Raycast(out var hit) == false)
-            {
-                return;
-            }
-
-            var position = modelTransform.position;
-
-            hit.y = position.y;
-            var direction = (hit - position).normalized;
-
-            DebugLog("Hit: " + hit + " AimDirection: " + direction);
-
-            modelTransform.forward = Vector3.Lerp
+            movementController.UpdateModelTargetRotation
             (
-                modelTransform.forward,
-                direction,
-                Time.deltaTime * aimModelRotationSpeed
+                directionInput.Value,
+                _isFire,
+                aiming.Value != 0
             );
-        }
-
-        private bool IsNeedRotateModel()
-        {
-            return aiming.Value != 0 || _isFire || directionInput.X != 0 || directionInput.Y != 0;
-        }
-
-        private void ApplyForceToCharacterController()
-        { 
-            characterController.Move(_moveForceOfFrame);
-        }
-
-        private bool Raycast(out Vector3 hit)
-        {
-            var screenCenterPoint = new Vector2((float)Screen.width / 2, (float)Screen.height / 2);
-            var ray = raycastCamera.ScreenPointToRay(screenCenterPoint);
-
-            if (Physics.Raycast(ray, out var raycastHit, 1500))
-            {
-                hit = raycastHit.point;
-
-                return true;
-            }
-
-            hit = Vector3.zero;
-            
-            return false;
         }
 
         private void UpdateValueLerps()
@@ -164,8 +102,6 @@ namespace Humanoid
             
             _playerInputs = new PlayerInputs();
             _actions = _playerInputs.Humanoid;
-            
-            animationsController.Initialize(this);
         }
 
         private void Subscribe()
@@ -238,23 +174,12 @@ namespace Humanoid
 
         private void Walk()
         {
-            var targetRotation = Mathf.Atan2
-              (
-                  directionInput.X,
-                  directionInput.Y
-              )
-              * Mathf.Rad2Deg
-              + cameraController.CameraTarget.eulerAngles.y;
-
-            var targetDirection = 
-                Quaternion.Euler(0.0f, targetRotation, 0.0f) 
-                * Vector3.forward;
-
-            var inputMagnitude = Mathf.Clamp01(directionInput.Value.magnitude);
-            var sprintMultiplier = 1 + sprinting.Value;
-            var currentSpeed = walkSpeed * inputMagnitude * sprintMultiplier;
-            
-            _moveForceOfFrame = targetDirection.normalized * currentSpeed;
+            movementController.UpdateMove
+            (
+                directionInput.Value,
+                cameraController.CameraTarget.eulerAngles.y,
+                sprinting.Value
+            );
             
             animationsController.Walk(directionInput.Value);
             
@@ -348,14 +273,14 @@ namespace Humanoid
         {
             if (context.started)
             {
-                ActiveActions++;
+                _activeActions++;
 
                 return true;
             }
 
             if (context.canceled)
             {
-                ActiveActions--;
+                _activeActions--;
 
                 return false;
             }

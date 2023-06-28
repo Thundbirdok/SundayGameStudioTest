@@ -6,7 +6,7 @@ namespace Humanoid
     using UnityEngine;
 
     [Serializable]
-    public class AnimationsController
+    public class HumanoidAnimationsController
     {
         [SerializeField]
         private Animator animator;
@@ -16,14 +16,7 @@ namespace Humanoid
 
         [SerializeField]
         private Timer idleTimer;
-        
-        private HumanoidActionsController _actionsController;
 
-        public void Initialize(HumanoidActionsController actionsController)
-        {
-            _actionsController = actionsController;
-        }
-        
         public void Enable()
         {
             idling.OnValueChanged += Idle;
@@ -36,11 +29,11 @@ namespace Humanoid
             idleTimer.OnFinished -= StartIdle;
         }
 
-        public void UpdateState(float deltaTime)
+        public void UpdateState(float deltaTime, int activeActions)
         {
             idling.UpdateValue(deltaTime);
             
-            UpdateIdleState(deltaTime);
+            UpdateIdleState(deltaTime, activeActions);
         }
         
         public void Fire(bool isFire)
@@ -79,9 +72,9 @@ namespace Humanoid
             animator.SetFloat(AnimationParametersHandler.Idling, idling.Value);
         }
         
-        private void UpdateIdleState(float deltaTime)
+        private void UpdateIdleState(float deltaTime, int activeActions)
         {
-            if (_actionsController.ActiveActions > 0 && idleTimer.State != TimerStates.AtZero)
+            if (activeActions > 0 && idleTimer.State != TimerStates.AtZero)
             {
                 idleTimer.ResetTime();
                 idling.SetTargetValue(0);

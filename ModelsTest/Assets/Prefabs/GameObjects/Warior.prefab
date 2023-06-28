@@ -1352,7 +1352,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3168289de0fca6b46a97f1ff7c59f13d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterController: {fileID: 279227305167224115}
   animationsController:
     animator: {fileID: 5028348363949970965}
     idling:
@@ -1365,18 +1364,20 @@ MonoBehaviour:
     aimSensitivity: {x: 0.5, y: 0.5}
     verticalAimMinMax: {x: -65, y: 45}
     aimCamera: {fileID: 0}
-  modelTransform: {fileID: 4065239845706691922}
-  raycastCamera: {fileID: 0}
+  movementController:
+    characterController: {fileID: 279227305167224115}
+    modelTransform: {fileID: 4065239845706691922}
+    raycastCamera: {fileID: 0}
+    walkSpeed: 0.1
+    aimModelRotationSpeed: 20
   directionInput:
     maxDelta: 2
   lookInput:
     maxDelta: 5
-  walkSpeed: 0.1
   sprinting:
     maxDelta: 2
   aiming:
     maxDelta: 5
-  aimModelRotationSpeed: 20
   isPrintLog: 0
 --- !u!143 &279227305167224115
 CharacterController:
