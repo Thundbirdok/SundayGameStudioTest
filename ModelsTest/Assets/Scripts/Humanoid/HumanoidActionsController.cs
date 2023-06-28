@@ -27,14 +27,9 @@ namespace Humanoid
         private Transform cameraTarget;
         
         private bool _isInitialized;
-        
-        private PlayerInputs _playerInputs;
-        private PlayerInputs.HumanoidActions _actions;
 
         [SerializeField]
         private Vector2Lerp directionInput;
-        private static readonly int XDirection = Animator.StringToHash("XDirection");
-        private static readonly int YDirection = Animator.StringToHash("YDirection");
 
         [SerializeField]
         private Vector2Lerp lookInput;
@@ -47,19 +42,15 @@ namespace Humanoid
 
         [SerializeField]
         private Vector2 verticalAimMinMax = new Vector2(-65,  45);
-        
+
         [SerializeField]
         private float walkSpeed = 0.1f;
 
         [SerializeField]
         private FloatLerp sprinting;
 
-        private static readonly int Sprinting = Animator.StringToHash("Sprinting");
-
         [SerializeField]
         private FloatLerp aiming;
-
-        private static readonly int Aiming = Animator.StringToHash("Aiming");
 
         [SerializeField]
         private FloatLerp idling;
@@ -73,15 +64,12 @@ namespace Humanoid
         [SerializeField]
         private bool isPrintLog;
 
-        private static readonly int Idling = Animator.StringToHash("Idling");
+        private PlayerInputs _playerInputs;
+        private PlayerInputs.HumanoidActions _actions;
 
         private int _activeActions;
 
         private bool _isFire;
-
-        private static readonly int IsFire = Animator.StringToHash("IsFire");
-
-        private static readonly int Jump = Animator.StringToHash("Jump");
 
         private Vector3 _aimTarget;
 
@@ -303,8 +291,8 @@ namespace Humanoid
             
             _moveForceOfFrame = targetDirection.normalized * currentSpeed;
 
-            animator.SetFloat(XDirection, directionInput.X);
-            animator.SetFloat(YDirection, directionInput.Y);
+            animator.SetFloat(AnimationParametersHandler.XDirection, directionInput.X);
+            animator.SetFloat(AnimationParametersHandler.YDirection, directionInput.Y);
 
             DebugLog("Walk: " + directionInput.Value);
         }
@@ -386,7 +374,7 @@ namespace Humanoid
 
         private void Sprint()
         {
-            animator.SetFloat(Sprinting, sprinting.Value);
+            animator.SetFloat(AnimationParametersHandler.Sprinting, sprinting.Value);
             
             DebugLog("Sprinting: " + sprinting.Value);
         }
@@ -405,7 +393,7 @@ namespace Humanoid
 
         private void Aim()
         {
-            animator.SetFloat(Aiming, aiming.Value);
+            animator.SetFloat(AnimationParametersHandler.Aiming, aiming.Value);
             
             DebugLog("Aiming: " + aiming.Value);
         }
@@ -421,7 +409,7 @@ namespace Humanoid
         {
             DebugLog("Jump");
             
-            animator.SetTrigger(Jump);
+            animator.SetTrigger(AnimationParametersHandler.Jump);
         }
         
         private void FireInput(InputAction.CallbackContext context)
@@ -435,7 +423,7 @@ namespace Humanoid
 
         private void Fire()
         {
-            animator.SetBool(IsFire, _isFire);
+            animator.SetBool(AnimationParametersHandler.IsFire, _isFire);
         }
 
         private void StartIdle()
@@ -445,7 +433,7 @@ namespace Humanoid
 
         private void Idle()
         {
-            animator.SetFloat(Idling, idling.Value);
+            animator.SetFloat(AnimationParametersHandler.Idling, idling.Value);
         }
 
         private bool CheckActionPhase(InputAction.CallbackContext context)
