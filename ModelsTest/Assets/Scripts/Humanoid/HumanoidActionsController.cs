@@ -2,31 +2,30 @@ namespace Humanoid
 {
     using Cinemachine;
     using Lerp;
-    using Timer;
     using UnityEngine;
     using UnityEngine.InputSystem;
 
     public class HumanoidActionsController : MonoBehaviour
     {
+        public int ActiveActions { get; private set; }
+
         [SerializeField]
         private CharacterController characterController;
-        
+
         [SerializeField]
-        private Animator animator;
+        private AnimationsController animationsController;
 
         [SerializeField]
         private Transform modelTransform;
-        
+
         [SerializeField]
         private Camera raycastCamera;
-        
+
         [SerializeField]
         private CinemachineVirtualCamera aimCamera;
 
         [SerializeField]
         private Transform cameraTarget;
-        
-        private bool _isInitialized;
 
         [SerializeField]
         private Vector2Lerp directionInput;
@@ -53,21 +52,15 @@ namespace Humanoid
         private FloatLerp aiming;
 
         [SerializeField]
-        private FloatLerp idling;
-
-        [SerializeField]
-        private Timer idleTimer;
-
-        [SerializeField]
         private float aimModelRotationSpeed = 20f;
 
         [SerializeField]
         private bool isPrintLog;
 
+        private bool _isInitialized;
+
         private PlayerInputs _playerInputs;
         private PlayerInputs.HumanoidActions _actions;
-
-        private int _activeActions;
 
         private bool _isFire;
 
@@ -82,7 +75,9 @@ namespace Humanoid
             Initialize();
             
             _actions.Enable();
-
+            
+            animationsController.Enable();
+             
             Subscribe();
         }
 
@@ -90,6 +85,8 @@ namespace Humanoid
         {
             _actions.Disable();
 
+            animationsController.Disable();
+            
             Unsubscribe();
         }
 
@@ -101,8 +98,9 @@ namespace Humanoid
         private void Update()
         {
             UpdateValueLerps();
-            UpdateIdleState();
 
+            animationsController.UpdateState(Time.deltaTime);
+            
             RotateModel();
         }
 
@@ -135,7 +133,7 @@ namespace Humanoid
 
         private bool IsNeedRotateModel()
         {
-            return aiming.Value != 0 || directionInput.X != 0 || directionInput.Y != 0;
+            return aiming.Value != 0 || _isFire || directionInput.X != 0 || directionInput.Y != 0;
         }
 
         private void ApplyForceToCharacterController()
@@ -160,26 +158,12 @@ namespace Humanoid
             return false;
         }
 
-        private void UpdateIdleState()
-        {
-            if (_activeActions > 0 && idleTimer.State != TimerStates.AtZero)
-            {
-                idleTimer.ResetTime();
-                idling.SetTargetValue(0);
-
-                return;
-            }
-
-            idleTimer.AddTime(Time.deltaTime);
-        }
-
         private void UpdateValueLerps()
         {
             var deltaTime = Time.deltaTime;
-            
+
             directionInput.UpdateValue(deltaTime);
             lookInput.UpdateValue(deltaTime);
-            idling.UpdateValue(deltaTime);
             sprinting.UpdateValue(deltaTime);
             aiming.UpdateValue(deltaTime);
         }
@@ -195,6 +179,8 @@ namespace Humanoid
             
             _playerInputs = new PlayerInputs();
             _actions = _playerInputs.Humanoid;
+            
+            animationsController.Initialize(this);
         }
 
         private void Subscribe()
@@ -223,11 +209,8 @@ namespace Humanoid
             
             _actions.Fire.started += FireInput;
             _actions.Fire.canceled += FireInput;
-         
-            idling.OnValueChanged += Idle;
-            aiming.OnValueChanged += Aim;
             
-            idleTimer.OnFinished += StartIdle;
+            aiming.OnValueChanged += Aim;
         }
 
         private void Unsubscribe()
@@ -254,11 +237,8 @@ namespace Humanoid
             
             _actions.Fire.started -= FireInput;
             _actions.Fire.canceled -= FireInput;
-         
-            idling.OnValueChanged -= Idle;
-            aiming.OnValueChanged -= Aim;
             
-            idleTimer.OnFinished -= StartIdle;
+            aiming.OnValueChanged -= Aim;
         }
 
         private void WalkInput(InputAction.CallbackContext context)
@@ -290,10 +270,9 @@ namespace Humanoid
             var currentSpeed = walkSpeed * inputMagnitude * sprintMultiplier;
             
             _moveForceOfFrame = targetDirection.normalized * currentSpeed;
-
-            animator.SetFloat(AnimationParametersHandler.XDirection, directionInput.X);
-            animator.SetFloat(AnimationParametersHandler.YDirection, directionInput.Y);
-
+            
+            animationsController.Walk(directionInput.Value);
+            
             DebugLog("Walk: " + directionInput.Value);
         }
 
@@ -374,7 +353,7 @@ namespace Humanoid
 
         private void Sprint()
         {
-            animator.SetFloat(AnimationParametersHandler.Sprinting, sprinting.Value);
+            animationsController.Sprint(sprinting.Value);
             
             DebugLog("Sprinting: " + sprinting.Value);
         }
@@ -393,61 +372,52 @@ namespace Humanoid
 
         private void Aim()
         {
-            animator.SetFloat(AnimationParametersHandler.Aiming, aiming.Value);
+            animationsController.Aim(aiming.Value);
             
             DebugLog("Aiming: " + aiming.Value);
         }
 
         private void JumpInput(InputAction.CallbackContext context)
         {
-            DoJump();
-            
-            CheckActionPhase(context);
+            if (CheckActionPhase(context))
+            {
+                Jump();
+            }
         }
 
-        private void DoJump()
+        private void Jump()
         {
-            DebugLog("Jump");
+            animationsController.Jump();
             
-            animator.SetTrigger(AnimationParametersHandler.Jump);
+            DebugLog("Jump");
         }
         
         private void FireInput(InputAction.CallbackContext context)
         {
             _isFire = CheckActionPhase(context);
 
-            DebugLog("Fire: " + _isFire);
-            
             Fire();
         }
 
         private void Fire()
         {
-            animator.SetBool(AnimationParametersHandler.IsFire, _isFire);
-        }
-
-        private void StartIdle()
-        {
-            idling.SetTargetValue(1);
-        }
-
-        private void Idle()
-        {
-            animator.SetFloat(AnimationParametersHandler.Idling, idling.Value);
+            animationsController.Fire(_isFire);
+            
+            DebugLog("Fire: " + _isFire);
         }
 
         private bool CheckActionPhase(InputAction.CallbackContext context)
         {
             if (context.started)
             {
-                _activeActions++;
+                ActiveActions++;
 
                 return true;
             }
 
             if (context.canceled)
             {
-                _activeActions--;
+                ActiveActions--;
 
                 return false;
             }
