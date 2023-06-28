@@ -420,7 +420,7 @@
                     "id": "ad4bdc8d-f621-4e15-85cf-e741c183bd76",
                     "path": "<Mouse>/delta",
                     "interactions": "",
-                    "processors": "NormalizeVector2",
+                    "processors": "",
                     "groups": "KeyboardMouse",
                     "action": "Look",
                     "isComposite": false,
