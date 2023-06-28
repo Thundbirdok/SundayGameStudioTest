@@ -260,6 +260,15 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Look"",
+                    ""type"": ""Value"",
+                    ""id"": ""f85963ec-8b28-4969-93ae-c16b9ca9ad7b"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -320,11 +329,33 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""ae2c9087-8856-4d69-8d45-70aee069e193"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Walk"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""93e2a51d-2d57-4743-9abf-035dc0b7fbcd"",
                     ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""KeyboardMouse"",
+                    ""action"": ""Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4c55f5b6-7707-40c2-8e36-150abeee79a3"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""Fire"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -342,11 +373,33 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""9f3dee27-5450-4939-bae0-16c393d88ab9"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Aim"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""b63e3700-e222-4752-9197-448074591abb"",
                     ""path"": ""<Keyboard>/leftShift"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""KeyboardMouse"",
+                    ""action"": ""Sprint"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""caa403cf-f79e-4a36-905e-82a1dcfa626f"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""Sprint"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -359,6 +412,39 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""KeyboardMouse"",
                     ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d0b620a5-8c14-463f-a1f6-d92dc7b26c92"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""793fb31d-ef2b-4514-b1e3-78b8d34597e2"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ad4bdc8d-f621-4e15-85cf-e741c183bd76"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": ""NormalizeVector2"",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -407,6 +493,7 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
         m_Humanoid_Jump = m_Humanoid.FindAction("Jump", throwIfNotFound: true);
         m_Humanoid_Fire = m_Humanoid.FindAction("Fire", throwIfNotFound: true);
         m_Humanoid_Aim = m_Humanoid.FindAction("Aim", throwIfNotFound: true);
+        m_Humanoid_Look = m_Humanoid.FindAction("Look", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -520,6 +607,7 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
     private readonly InputAction m_Humanoid_Jump;
     private readonly InputAction m_Humanoid_Fire;
     private readonly InputAction m_Humanoid_Aim;
+    private readonly InputAction m_Humanoid_Look;
     public struct HumanoidActions
     {
         private @PlayerInputs m_Wrapper;
@@ -529,6 +617,7 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
         public InputAction @Jump => m_Wrapper.m_Humanoid_Jump;
         public InputAction @Fire => m_Wrapper.m_Humanoid_Fire;
         public InputAction @Aim => m_Wrapper.m_Humanoid_Aim;
+        public InputAction @Look => m_Wrapper.m_Humanoid_Look;
         public InputActionMap Get() { return m_Wrapper.m_Humanoid; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -553,6 +642,9 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                 @Aim.started -= m_Wrapper.m_HumanoidActionsCallbackInterface.OnAim;
                 @Aim.performed -= m_Wrapper.m_HumanoidActionsCallbackInterface.OnAim;
                 @Aim.canceled -= m_Wrapper.m_HumanoidActionsCallbackInterface.OnAim;
+                @Look.started -= m_Wrapper.m_HumanoidActionsCallbackInterface.OnLook;
+                @Look.performed -= m_Wrapper.m_HumanoidActionsCallbackInterface.OnLook;
+                @Look.canceled -= m_Wrapper.m_HumanoidActionsCallbackInterface.OnLook;
             }
             m_Wrapper.m_HumanoidActionsCallbackInterface = instance;
             if (instance != null)
@@ -572,6 +664,9 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                 @Aim.started += instance.OnAim;
                 @Aim.performed += instance.OnAim;
                 @Aim.canceled += instance.OnAim;
+                @Look.started += instance.OnLook;
+                @Look.performed += instance.OnLook;
+                @Look.canceled += instance.OnLook;
             }
         }
     }
@@ -607,5 +702,6 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnFire(InputAction.CallbackContext context);
         void OnAim(InputAction.CallbackContext context);
+        void OnLook(InputAction.CallbackContext context);
     }
 }

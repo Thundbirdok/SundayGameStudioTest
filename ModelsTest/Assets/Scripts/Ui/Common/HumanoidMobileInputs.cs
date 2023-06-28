@@ -1,11 +1,10 @@
-using UnityEngine;
-
 namespace Ui.Common
 {
     using System;
+    using UnityEngine;
 
     [Serializable]
-    public class CarMobileInputs
+    public class HumanoidMobileInputs
     {
         [SerializeField]
         private GameObject gameObject;
@@ -24,7 +23,7 @@ namespace Ui.Common
 #endif
             
         }
-
+        
         public void Deinitialize()
         {
             gameObject.SetActive(false);

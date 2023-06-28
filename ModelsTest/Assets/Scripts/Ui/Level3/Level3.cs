@@ -18,7 +18,24 @@ namespace Ui.Level3
         [SerializeField]
         private CarMobileInputs carMobileInputs;
 
-        private void Awake() => carMobileInputs.Initialize();
+        [SerializeField]
+        private HumanoidMobileInputs humanoidMobileInputs;
+
+        private bool _isHumanoid = true;
+        
+        private void Awake()
+        {
+            if (_isHumanoid)
+            {
+                humanoidMobileInputs.Initialize();
+                carMobileInputs.Deinitialize();
+                
+                return;
+            }
+
+            humanoidMobileInputs.Deinitialize();
+            carMobileInputs.Initialize();
+        }
 
         private void OnEnable() => toMenu.onClick.AddListener(ToMenu);
 
