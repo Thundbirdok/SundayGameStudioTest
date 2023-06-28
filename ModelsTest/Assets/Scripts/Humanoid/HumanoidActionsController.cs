@@ -16,6 +16,9 @@ namespace Humanoid
         private HumanoidMovementController movementController;
 
         [SerializeField]
+        private HumanoidInputController inputController;
+        
+        [SerializeField]
         private Vector2Lerp directionInput;
 
         [SerializeField]
@@ -32,22 +35,15 @@ namespace Humanoid
         
         private bool _isInitialized;
 
-        private int _activeActions;
-
         private bool _isFire;
-
-        private PlayerInputs _playerInputs;
-        private PlayerInputs.HumanoidActions _actions;
-
-
+        
         private Vector3 _aimTarget;
 
         private void OnEnable()
         {
             Initialize();
             
-            _actions.Enable();
-            
+            inputController.Enable();
             animationsController.Enable();
              
             Subscribe();
@@ -55,23 +51,19 @@ namespace Humanoid
 
         private void OnDisable()
         {
-            _actions.Disable();
-
+            inputController.Disable();
             animationsController.Disable();
             
             Unsubscribe();
         }
 
-        private void FixedUpdate()
-        {
-            movementController.Move();
-        }
+        private void FixedUpdate() => movementController.Move();
 
         private void Update()
         {
             UpdateValueLerps();
 
-            animationsController.UpdateState(Time.deltaTime, _activeActions);
+            animationsController.UpdateState(Time.deltaTime, inputController.ActiveActions);
             
             movementController.UpdateModelTargetRotation
             (
@@ -100,66 +92,45 @@ namespace Humanoid
 
             _isInitialized = true;
             
-            _playerInputs = new PlayerInputs();
-            _actions = _playerInputs.Humanoid;
+            inputController.Initialize();
         }
 
         private void Subscribe()
         {
-            _actions.Walk.started += WalkInput;
-            _actions.Walk.performed += WalkInput;
-            _actions.Walk.canceled += WalkInput;
-
+            inputController.OnWalk += WalkInput;
             directionInput.OnValueChanged += Walk;
             
-            _actions.Look.started += LookInput;
-            _actions.Look.performed += LookInput;
-            _actions.Look.canceled += LookInput;
-            
+            inputController.OnLook += LookInput;
             lookInput.OnValueChanged += Look;
             
-            _actions.Sprint.started += SprintInput;
-            _actions.Sprint.canceled += SprintInput;
-            
+            inputController.OnSprint += SprintInput;
             sprinting.OnValueChanged += Sprint;
             
-            _actions.Aim.started += AimInput;
-            _actions.Aim.canceled += AimInput;
-            
-            _actions.Jump.started += JumpInput;
-            
-            _actions.Fire.started += FireInput;
-            _actions.Fire.canceled += FireInput;
-            
+            inputController.OnAim += AimInput;
             aiming.OnValueChanged += Aim;
+
+            inputController.OnJump += JumpInput;
+
+            inputController.OnFire += FireInput;
         }
 
         private void Unsubscribe()
         {
-            _actions.Walk.started -= WalkInput;
-            _actions.Walk.performed -= WalkInput;
-            _actions.Walk.canceled -= WalkInput;
-
+            inputController.OnWalk -= WalkInput;
             directionInput.OnValueChanged -= Walk;
             
-            _actions.Look.started -= LookInput;
-            _actions.Look.performed -= LookInput;
-            _actions.Look.canceled -= LookInput;
-            
+            inputController.OnLook -= LookInput;
             lookInput.OnValueChanged -= Look;
             
-            _actions.Sprint.started -= SprintInput;
-            _actions.Sprint.canceled -= SprintInput;
+            inputController.OnSprint -= SprintInput;
+            sprinting.OnValueChanged -= Sprint;
             
-            _actions.Aim.started -= AimInput;
-            _actions.Aim.canceled -= AimInput;
-            
-            _actions.Jump.started -= JumpInput;
-            
-            _actions.Fire.started -= FireInput;
-            _actions.Fire.canceled -= FireInput;
-            
+            inputController.OnAim -= AimInput;
             aiming.OnValueChanged -= Aim;
+
+            inputController.OnJump -= JumpInput;
+
+            inputController.OnFire -= FireInput;
         }
 
         private void WalkInput(InputAction.CallbackContext context)
@@ -168,8 +139,6 @@ namespace Humanoid
             directionInput.SetTargetValue(direction);
 
             Walk();
-            
-            CheckActionPhase(context);
         }
 
         private void Walk()
@@ -182,7 +151,6 @@ namespace Humanoid
             );
             
             animationsController.Walk(directionInput.Value);
-            
             DebugLog("Walk: " + directionInput.Value);
         }
 
@@ -193,14 +161,11 @@ namespace Humanoid
 
             Look();
             Walk();
-            
-            CheckActionPhase(context);
         }
 
         private void Look()
         {
             cameraController.RotateCamera(lookInput.Value, aiming.Value > 0);
-            
             DebugLog("Look: " + lookInput.Value);
         }
 
@@ -208,16 +173,11 @@ namespace Humanoid
         {
             var sprintingValue = context.ReadValue<float>();
             sprinting.SetTargetValue(sprintingValue);
-
-            Sprint();
-            
-            CheckActionPhase(context);
         }
 
         private void Sprint()
         {
             animationsController.Sprint(sprinting.Value);
-            
             DebugLog("Sprinting: " + sprinting.Value);
         }
 
@@ -227,22 +187,17 @@ namespace Humanoid
             aiming.SetTargetValue(aimingValue);
             
             cameraController.Aim(aimingValue > 0);
-            
-            Aim();
-            
-            CheckActionPhase(context);
         }
 
         private void Aim()
         {
             animationsController.Aim(aiming.Value);
-            
             DebugLog("Aiming: " + aiming.Value);
         }
 
         private void JumpInput(InputAction.CallbackContext context)
         {
-            if (CheckActionPhase(context))
+            if (context.started)
             {
                 Jump();
             }
@@ -251,13 +206,12 @@ namespace Humanoid
         private void Jump()
         {
             animationsController.Jump();
-            
             DebugLog("Jump");
         }
         
         private void FireInput(InputAction.CallbackContext context)
         {
-            _isFire = CheckActionPhase(context);
+            _isFire = context.started;
 
             Fire();
         }
@@ -265,27 +219,7 @@ namespace Humanoid
         private void Fire()
         {
             animationsController.Fire(_isFire);
-            
             DebugLog("Fire: " + _isFire);
-        }
-
-        private bool CheckActionPhase(InputAction.CallbackContext context)
-        {
-            if (context.started)
-            {
-                _activeActions++;
-
-                return true;
-            }
-
-            if (context.canceled)
-            {
-                _activeActions--;
-
-                return false;
-            }
-            
-            return true;
         }
 
         private void DebugLog(string message)
