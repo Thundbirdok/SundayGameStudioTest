@@ -1359,17 +1359,18 @@ MonoBehaviour:
       maxDelta: 2
     idleTimer:
       <Duration>k__BackingField: 5
+  cameraController:
+    <CameraTarget>k__BackingField: {fileID: 961874968}
+    lookSensitivity: {x: 1, y: 1}
+    aimSensitivity: {x: 0.5, y: 0.5}
+    verticalAimMinMax: {x: -65, y: 45}
+    aimCamera: {fileID: 0}
   modelTransform: {fileID: 4065239845706691922}
   raycastCamera: {fileID: 0}
-  aimCamera: {fileID: 0}
-  cameraTarget: {fileID: 961874968}
   directionInput:
     maxDelta: 2
   lookInput:
     maxDelta: 5
-  lookSensitivity: {x: 1, y: 1}
-  aimSensitivity: {x: 0.5, y: 0.5}
-  verticalAimMinMax: {x: -65, y: 45}
   walkSpeed: 0.1
   sprinting:
     maxDelta: 2

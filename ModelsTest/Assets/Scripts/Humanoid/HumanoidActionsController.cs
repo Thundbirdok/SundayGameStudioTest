@@ -1,6 +1,5 @@
 namespace Humanoid
 {
-    using Cinemachine;
     using Lerp;
     using UnityEngine;
     using UnityEngine.InputSystem;
@@ -16,31 +15,19 @@ namespace Humanoid
         private AnimationsController animationsController;
 
         [SerializeField]
+        private CameraController cameraController;
+        
+        [SerializeField]
         private Transform modelTransform;
 
         [SerializeField]
         private Camera raycastCamera;
 
         [SerializeField]
-        private CinemachineVirtualCamera aimCamera;
-
-        [SerializeField]
-        private Transform cameraTarget;
-
-        [SerializeField]
         private Vector2Lerp directionInput;
 
         [SerializeField]
         private Vector2Lerp lookInput;
-
-        [SerializeField]
-        private Vector2 lookSensitivity = Vector2.one;
-
-        [SerializeField]
-        private Vector2 aimSensitivity = Vector2.one / 2;
-
-        [SerializeField]
-        private Vector2 verticalAimMinMax = new Vector2(-65,  45);
 
         [SerializeField]
         private float walkSpeed = 0.1f;
@@ -67,8 +54,6 @@ namespace Humanoid
         private Vector3 _aimTarget;
 
         private Vector3 _moveForceOfFrame;
-
-        private Vector2 _cameraTargetRotation;
 
         private void OnEnable()
         {
@@ -259,7 +244,7 @@ namespace Humanoid
                   directionInput.Y
               )
               * Mathf.Rad2Deg
-              + cameraTarget.eulerAngles.y;
+              + cameraController.CameraTarget.eulerAngles.y;
 
             var targetDirection = 
                 Quaternion.Euler(0.0f, targetRotation, 0.0f) 
@@ -289,56 +274,9 @@ namespace Humanoid
 
         private void Look()
         {
-            GetLookInputsWithSensitivity(out var xInput, out var yInput);
-
-            SetNewCameraRotation(xInput, yInput);
-
+            cameraController.RotateCamera(lookInput.Value, aiming.Value > 0);
+            
             DebugLog("Look: " + lookInput.Value);
-        }
-
-        private void SetNewCameraRotation(float xInput, float yInput)
-        {
-            _cameraTargetRotation.x += xInput;
-            _cameraTargetRotation.y += yInput;
-
-            ClampCameraTargetRotation();
-
-            cameraTarget.rotation = Quaternion.Euler
-                (_cameraTargetRotation.y, _cameraTargetRotation.x, 0.0f);
-        }
-
-        private void GetLookInputsWithSensitivity(out float xInput, out float yInput)
-        {
-            xInput = lookInput.Value.x;
-            yInput = -lookInput.Value.y;
-
-            if (aiming.Value == 0)
-            {
-                xInput *= lookSensitivity.x;
-                yInput *= lookSensitivity.y;
-                
-                return;
-            }
-
-            xInput *= aimSensitivity.x;
-            yInput *= aimSensitivity.y;
-        }
-
-        private void ClampCameraTargetRotation()
-        {
-            _cameraTargetRotation.x %= 360;
-
-            _cameraTargetRotation.x = 
-                _cameraTargetRotation.x > 180
-                ? _cameraTargetRotation.x - 360
-                : _cameraTargetRotation.x;
-
-            _cameraTargetRotation.x = 
-                _cameraTargetRotation.x < -180
-                ? _cameraTargetRotation.x + 360
-                : _cameraTargetRotation.x;
-
-            _cameraTargetRotation.y = Mathf.Clamp(_cameraTargetRotation.y, verticalAimMinMax.x, verticalAimMinMax.y);
         }
 
         private void SprintInput(InputAction.CallbackContext context)
@@ -362,8 +300,8 @@ namespace Humanoid
         {
             var aimingValue = context.ReadValue<float>();
             aiming.SetTargetValue(aimingValue);
-
-            aimCamera.gameObject.SetActive(aimingValue > 0);
+            
+            cameraController.Aim(aimingValue > 0);
             
             Aim();
             

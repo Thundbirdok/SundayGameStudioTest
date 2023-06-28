@@ -2670,6 +2670,10 @@ PrefabInstance:
       propertyPath: raycastCamera
       value: 
       objectReference: {fileID: 1339696324}
+    - target: {fileID: 4094152979136467086, guid: cfc30512ccd1bbe4ca60fe10fc590d3d, type: 3}
+      propertyPath: cameraController.aimCamera
+      value: 
+      objectReference: {fileID: 1007019790}
     - target: {fileID: 4798967851982660688, guid: cfc30512ccd1bbe4ca60fe10fc590d3d, type: 3}
       propertyPath: m_Name
       value: Warior
