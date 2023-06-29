@@ -26,9 +26,17 @@ namespace Humanoid
             _actions = _playerInputs.Humanoid;
         }
 
-        public void Enable() => Subscribe();
+        public void Enable()
+        {
+            _actions.Enable();
+            Subscribe();
+        }
 
-        public void Disable() => Unsubscribe();
+        public void Disable()
+        {
+            _actions.Disable();
+            Unsubscribe();
+        }
 
         private void Subscribe()
         {
