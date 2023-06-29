@@ -1,6 +1,5 @@
 namespace Interactions
 {
-    using System.Collections.Generic;
     using UnityEngine;
 
     public class MaterialColorHandler : MonoBehaviour, IInteractable
@@ -8,16 +7,13 @@ namespace Interactions
         [SerializeField]
         private Color[] colors;
 
-        private static readonly int BaseColor = Shader.PropertyToID("_Color");
-        private HashSet<Material> _collectedMaterials;
+        private static readonly int BaseColor = Shader.PropertyToID("_BaseColor");
+        
         private MaterialPropertyBlock[] _collectedMaterialPropertyBlocks;
 
         private SkinnedMeshRenderer[] _meshRenderers;
 
-        private void Start()
-        {
-            CollectMaterials();
-        }
+        private void Start() => CollectMaterials();
 
         public void Interact() => ChangeColor();
         
@@ -38,7 +34,6 @@ namespace Interactions
         private void CollectMaterials()
         {
             _meshRenderers = GetComponentsInChildren<SkinnedMeshRenderer>();
-            _collectedMaterials = new HashSet<Material>();
             _collectedMaterialPropertyBlocks = new MaterialPropertyBlock[_meshRenderers.Length];
 
             for (var i = 0; i < _meshRenderers.Length; i++)
@@ -47,11 +42,6 @@ namespace Interactions
                 _meshRenderers[i].GetPropertyBlock(block);
                 
                 _collectedMaterialPropertyBlocks[i] = block;
-
-                // foreach (var material in mesh.materials)
-                // {
-                //     _collectedMaterials.Add(material);
-                // }
             }
         }
     }
