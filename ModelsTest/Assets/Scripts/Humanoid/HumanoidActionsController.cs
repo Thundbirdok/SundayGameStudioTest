@@ -73,16 +73,6 @@ namespace Humanoid
             );
         }
 
-        private void UpdateValueLerps()
-        {
-            var deltaTime = Time.deltaTime;
-
-            directionInput.UpdateValue(deltaTime);
-            lookInput.UpdateValue(deltaTime);
-            sprinting.UpdateValue(deltaTime);
-            aiming.UpdateValue(deltaTime);
-        }
-
         private void Initialize()
         {
             if (_isInitialized)
@@ -131,6 +121,16 @@ namespace Humanoid
             inputController.OnJump -= JumpInput;
 
             inputController.OnFire -= FireInput;
+        }
+
+        private void UpdateValueLerps()
+        {
+            var deltaTime = Time.deltaTime;
+
+            directionInput.UpdateValue(deltaTime);
+            lookInput.UpdateValue(deltaTime);
+            sprinting.UpdateValue(deltaTime);
+            aiming.UpdateValue(deltaTime);
         }
 
         private void WalkInput(InputAction.CallbackContext context)
