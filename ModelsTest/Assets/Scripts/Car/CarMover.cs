@@ -5,6 +5,10 @@ namespace Car
 
     public class CarMover : MonoBehaviour
     {
+        public bool IsBreaking { get; private set; }
+        public bool IsHandBreaking { get; private set; }
+        public float CurrentSteerAngle { get; private set; }
+
         [SerializeReference]
         private Rigidbody carRigidbody;
 
@@ -13,43 +17,42 @@ namespace Car
 
         [SerializeField]
         private float breakVelocity;
-        
+
         [SerializeField]
         private float breakForce;
-        
+
         [SerializeField]
         private float handBreakForce;
-        
+
         [SerializeField]
         private float maxSteerAngle;
 
         [SerializeField] 
         private WheelCollider frontLeftWheelCollider;
-        
+
         [SerializeField]
         private WheelCollider frontRightWheelCollider;
-        
+
         [SerializeField] 
         private WheelCollider rearLeftWheelCollider;
-        
+
         [SerializeField]
         private WheelCollider rearRightWheelCollider;
 
-        [SerializeField]
-        private Transform frontLeftWheelTransform;
-        
-        [SerializeField]
-        private Transform frontRightWheelTransform;
-        
-        [SerializeField]
-        private Transform rearLeftWheelTransform;
-        
-        [SerializeField]
-        private Transform rearRightWheelTransform;
+        [field: SerializeField]
+        public Transform FrontLeftWheelTransform { get; private set; }
+
+        [field: SerializeField]
+        public Transform FrontRightWheelTransform { get; private set; }
+
+        [field: SerializeField]
+        public Transform RearLeftWheelTransform { get; private set; }
+
+        [field: SerializeField]
+        public Transform RearRightWheelTransform { get; private set; }
 
         private float _turnInput;
         private float _accelerateInput;
-        private float _currentSteerAngle;
         private bool _handBreakInput;
 
         private bool _isInitialized;
@@ -73,33 +76,11 @@ namespace Car
             _actions.Disable();
         }
 
-        private void Subscribe()
-        {
-            _actions.Accelerate.started += Accelerate;
-            _actions.Turn.started += Turn;
-            _actions.HandBreak.started += HandBreak;
-
-            _actions.Accelerate.canceled += Accelerate;
-            _actions.Turn.canceled += Turn;
-            _actions.HandBreak.canceled += HandBreak;
-        }
-
         private void FixedUpdate() 
         {
             HandleVelocity();
             HandleSteering();
             UpdateWheels();
-        }
-
-        private void Unsubscribe()
-        {
-            _actions.Accelerate.started -= Accelerate;
-            _actions.Turn.started -= Turn;
-            _actions.HandBreak.started -= HandBreak;
-
-            _actions.Accelerate.canceled -= Accelerate;
-            _actions.Turn.canceled -= Turn;
-            _actions.HandBreak.canceled -= HandBreak;
         }
 
         private void Initialized()
@@ -113,6 +94,28 @@ namespace Car
 
             _playerInputs = new PlayerInputs(); 
             _actions = _playerInputs.Car;
+        }
+
+        private void Subscribe()
+        {
+            _actions.Accelerate.started += Accelerate;
+            _actions.Turn.started += Turn;
+            _actions.HandBreak.started += HandBreak;
+
+            _actions.Accelerate.canceled += Accelerate;
+            _actions.Turn.canceled += Turn;
+            _actions.HandBreak.canceled += HandBreak;
+        }
+
+        private void Unsubscribe()
+        {
+            _actions.Accelerate.started -= Accelerate;
+            _actions.Turn.started -= Turn;
+            _actions.HandBreak.started -= HandBreak;
+
+            _actions.Accelerate.canceled -= Accelerate;
+            _actions.Turn.canceled -= Turn;
+            _actions.HandBreak.canceled -= HandBreak;
         }
 
         private void Accelerate(InputAction.CallbackContext context) => _accelerateInput = context.ReadValue<float>();
@@ -147,17 +150,19 @@ namespace Car
         private void Accelerate()
         {
             var torque = _accelerateInput * motorForce;
-
+                
             SetMotorTorque(torque);
-
+            
+            IsBreaking = false;
+            
             if (_handBreakInput)
             {
-                SetHandBreakTorque(handBreakForce);
+                HandBreak();
+                
+                return;
             }
-            else
-            {
-                SetBreakTorque(0);
-            }
+
+            SetBreakTorque(0);
         }
 
         private bool IsTryAccelerateAgainstVelocity(float relativeVelocity)
@@ -170,8 +175,19 @@ namespace Car
             };
         }
 
+        private void HandBreak()
+        {
+            IsBreaking = false;
+            IsHandBreaking = true;
+
+            SetHandBreakTorque(handBreakForce);
+        }
+
         private void Break()
         {
+            IsBreaking = true;
+            IsHandBreaking = false;
+            
             SetMotorTorque(0);
             SetBreakTorque(breakForce);
         }
@@ -207,17 +223,17 @@ namespace Car
         
         private void HandleSteering() 
         {
-            _currentSteerAngle = maxSteerAngle * _turnInput;
-            frontLeftWheelCollider.steerAngle = _currentSteerAngle;
-            frontRightWheelCollider.steerAngle = _currentSteerAngle;
+            CurrentSteerAngle = maxSteerAngle * _turnInput;
+            frontLeftWheelCollider.steerAngle = CurrentSteerAngle;
+            frontRightWheelCollider.steerAngle = CurrentSteerAngle;
         }
 
         private void UpdateWheels() 
         {
-            UpdateSingleWheel(frontLeftWheelCollider, frontLeftWheelTransform);
-            UpdateSingleWheel(frontRightWheelCollider, frontRightWheelTransform);
-            UpdateSingleWheel(rearRightWheelCollider, rearRightWheelTransform);
-            UpdateSingleWheel(rearLeftWheelCollider, rearLeftWheelTransform);
+            UpdateSingleWheel(frontLeftWheelCollider, FrontLeftWheelTransform);
+            UpdateSingleWheel(frontRightWheelCollider, FrontRightWheelTransform);
+            UpdateSingleWheel(rearRightWheelCollider, RearRightWheelTransform);
+            UpdateSingleWheel(rearLeftWheelCollider, RearLeftWheelTransform);
         }
 
         private static void UpdateSingleWheel(WheelCollider wheelCollider, Transform wheelTransform) 
