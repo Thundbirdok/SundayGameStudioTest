@@ -15,6 +15,9 @@ namespace Humanoid
 
         [SerializeField]
         private Camera raycastCamera;
+
+        [SerializeField]
+        private Transform aimTarget;
         
         [SerializeField]
         private float walkSpeed = 0.1f;
@@ -28,12 +31,14 @@ namespace Humanoid
 
         public void UpdateModelTargetRotation(Vector2 directionInput, bool isFire, bool isAiming)
         {
-            if (IsNeedRotateModel(directionInput, isFire, isAiming) == false)
+            if (Raycast(out var hit) == false)
             {
                 return;
             }
 
-            if (Raycast(out var hit) == false)
+            aimTarget.transform.position = hit;
+            
+            if (IsNeedRotateModel(directionInput, isFire, isAiming) == false)
             {
                 return;
             }

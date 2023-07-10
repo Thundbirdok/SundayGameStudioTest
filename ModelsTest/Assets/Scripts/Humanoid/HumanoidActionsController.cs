@@ -32,12 +32,10 @@ namespace Humanoid
 
         [SerializeField]
         private bool isPrintLog;
-        
+
         private bool _isInitialized;
 
         private bool _isFire;
-        
-        private Vector3 _aimTarget;
 
         private void OnEnable()
         {
